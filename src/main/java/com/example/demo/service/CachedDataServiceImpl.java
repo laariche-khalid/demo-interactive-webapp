@@ -17,11 +17,10 @@ public class CachedDataServiceImpl implements CachedDataService {
 	private Match matchData;
 
     public CachedDataServiceImpl(){
-
-       
+        log.info("Initialistion des matches ...........");
         matchData = Match.builder().id(1)
-        .bluePlayer(Joueur.builder().clubName("Club 1").name("Khalid").build())
-        .redPlayer(Joueur.builder().clubName("Club 2").name("Fouad").build())
+        .bluePlayer(Joueur.builder().clubName("Club Karaté Bleu").name("Khalid").build())
+        .redPlayer(Joueur.builder().clubName("Club Karaté Rouge").name("Fouad").build())
         .build();
         List<Score> scores = new ArrayList<>();
          for (int i = 0; i < 4; i++) {
@@ -36,13 +35,13 @@ public class CachedDataServiceImpl implements CachedDataService {
 
     }
     @Override
-    public Match getLiveMatchData() {
+    public Match getLiveMatchData(Long matchId) {
         log.info("Get live Match data called");
 		return matchData;
     }
 
     @Override
-    public void updateLiveScoreData(Score score) {
+    public boolean updateLiveScoreData(Score score) {
         if(score != null) {
 			log.debug("Matche updating");
             matchData.getScores().stream()
@@ -51,7 +50,10 @@ public class CachedDataServiceImpl implements CachedDataService {
                                                 a.setRedScore(score.getRedScore());
                                                 a.setBlueScore(score.getBlueScore());
                                             });
-		}
+            return true;
+		}else{
+            return false;
+        }
     }
 
 }

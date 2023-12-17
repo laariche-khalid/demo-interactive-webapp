@@ -5,7 +5,7 @@ import com.example.demo.model.Score;
 
 public interface CachedDataService {
     
-    Match getLiveMatchData();
+    Match getLiveMatchData(Long matchId);
 
-	void updateLiveScoreData(Score Score);
+	boolean updateLiveScoreData(Score Score);
 }

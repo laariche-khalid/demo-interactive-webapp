@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,5 +17,7 @@ public class Match {
     private int id;
     private Joueur redPlayer;
     private Joueur bluePlayer;
+    private StatusMatch status;
+    private LocalDateTime startTime;
     List<Score> scores =  new ArrayList();
 }

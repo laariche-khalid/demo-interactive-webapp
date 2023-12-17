@@ -171,7 +171,7 @@
         function updateDashboardFromAPI(matchId) {
             // Faites une requête AJAX à votre API avec le matchId
             $.ajax({
-                url: 'votre_api_url/' + matchId,
+                url: 'http://localhost:8080/api/match/' + matchId,
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -188,17 +188,18 @@
         function updateDashboardWithData(data) {
             // Mettez à jour votre tableau de bord avec les données reçues
             // ...
+            console.log(data);
         }
 
         // Appel initial pour afficher le tableau de bord
         // Vous pouvez remplacer 123 par l'ID du match que vous souhaitez charger
-        //updateDashboardFromAPI(123);
+        updateDashboardFromAPI(123);
 
         // Mettre à jour le tableau de bord toutes les X secondes (par exemple, toutes les 60 secondes)
-        //setInterval(function () {
-        //    // Vous pouvez remplacer 123 par l'ID du match que vous souhaitez charger
-        //    updateDashboardFromAPI(123);
-        //}, 60000); // 60000 millisecondes = 60 secondes
+        setInterval(function () {
+            // Vous pouvez remplacer 123 par l'ID du match que vous souhaitez charger
+            updateDashboardFromAPI(123);
+        }, 1000); // 60000 millisecondes = 60 secondes
     });
     // Données factices pour représenter les scores des arbitres avec les noms des joueurs
     var scores = [
@@ -280,7 +281,7 @@
     updateCountdown();
 
     // Mettre à jour le compte à rebours toutes les secondes (1000 ms)
-    setInterval(updateCountdown, 1000);
+    
 </script>
 
 </body>
