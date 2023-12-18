@@ -1,179 +1,272 @@
-<!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saisie du Score de Karaté</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <title>Saisie du Score</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #ecf0f1;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #ecf0f1;
+      }
 
-        .container {
-            max-width: 100%;
-            margin: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
+      .container {
+        max-width: 100%;
+        margin: 20px;
+        overflow: hidden;
+      }
 
-        .header-block {
-            background-color: #3498db;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
+      .header-block {
+        background-color: #2c3e50;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 5px;
+      }
 
-        .info-block {
-            background-color: #2c3e50;
-            color: #fff;
-            padding: 15px;
-            text-align: center;
-        }
+      .info-block {
+        background-color: #2c3e50;
+        color: #fff;
+        padding: 15px;
+        text-align: center;
+      }
 
-        .content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+      .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-        .block {
-            width: 100%;
-            box-sizing: border-box;
-            text-align: center;
-            position: relative;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-        }
+      .block {
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+        position: relative;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+      }
 
-        .red-block {
-            background-color: #e74c3c;
-            color: #fff;
-        }
+      .red-block {
+        background-color: #e74c3c;
+        color: #fff;
+      }
 
-        .blue-block {
-            background-color: #3498db;
-            color: #fff;
-        }
+      .blue-block {
+        background-color: #3498db;
+        color: #fff;
+      }
 
-        .score {
-            font-size: 2em;
-            margin: 0;
-        }
+      .score {
+        font-size: 2em;
+        margin: 0;
+      }
 
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
+      .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+      }
 
-        .button {
-            flex-basis: 48%;
-            font-size: 1.5em;
-            cursor: pointer;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
+      .button {
+        flex-basis: 48%;
+        font-size: 1.5em;
+        cursor: pointer;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
 
-        .button-red {
-            background-color: #c0392b;
-        }
+      .button-red {
+        background-color: #c0392b;
+      }
+      .button-red:disabled {
+        background-color: #dfc7c5;
+        cursor: not-allowed;
+      }
+      .button-blue {
+        background-color: #2980b9;
+      }
+      .button-blue:disabled {
+        background-color: #96b3c6;
+        cursor: not-allowed;
+      }
+   
 
-        .button-blue {
-            background-color: #2980b9;
-        }
-
-        .button:hover {
-            background-color: #2c3e50;
-        }
-
-        .countdown {
-            font-size: 1.5em;
-            margin: 20px 0;
-            color: #2c3e50;
-        }
+      .countdown {
+        font-size: 3.5em;
+        margin: -18px 1px;
+      }
+      h2 {
+        margin: 1px;
+    font-size: 1em;
+    font-weight: 400;
+      }
+      h1 {
+        margin: 4px;
+      }
+      p {
+        margin: 14px;
+      }
+      .status {
+        border: none;
+        padding: 5px 44px;
+        background-color: #659d49;
+        border-radius: 5px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-block">
+        <h1>Arbitre 1</h1>
+        <p class="countdown" id="countdown">03:00</p>
+        <p>Evenement XXXX-- Match ID</p>
+        <div class="status">MATCH EN COURS</div>
+      </div>
 
-<div class="container">
-    <div class="header-block">
-        <h1>Tableau de Score de Karaté</h1>
-        <p class="countdown" id="countdown">Temps restant: 10:00</p>
-    </div>
-
-    <div class="info-block">
-        <p>Arbitre: John Doe</p>
-        <p>Événement: Championnat de Karaté</p>
-        <p>Jour: Mercredi</p>
-        <p>Club: Club de Karaté XYZ</p>
-    </div>
-
-    <div class="content">
+      <div class="content">
         <div class="block red-block">
-            <h2>Joueur Rouge</h2>
-            <p class="score" id="redScore">0</p>
-            <div class="button-container">
-                <button class="button button-red" onclick="changeScore('red', 1)">+</button>
-                <button class="button button-red" onclick="changeScore('red', -1)">-</button>
-            </div>
+          <h2>Club</h2>
+          <p class="score" id="redScore">0</p>
+          <div class="button-container">
+            <button class="button button-red" onclick="changeScore('red', 1)">
+              +
+            </button>
+            <button class="button button-red" onclick="changeScore('red', -1)">
+              -
+            </button>
+          </div>
         </div>
 
         <div class="block blue-block">
-            <h2>Joueur Bleu</h2>
-            <p class="score" id="blueScore">0</p>
-            <div class="button-container">
-                <button class="button button-blue" onclick="changeScore('blue', 1)">+</button>
-                <button class="button button-blue" onclick="changeScore('blue', -1)">-</button>
-            </div>
+          <h2>Club</h2>
+          <p class="score" id="blueScore">0</p>
+          <div class="button-container">
+            <button class="button button-blue" onclick="changeScore('blue', 1)">
+              +
+            </button>
+            <button
+              class="button button-blue"
+              onclick="changeScore('blue', -1, 'ClubKaratéBleu')">
+              -
+            </button>
+          </div>
         </div>
+      </div>
     </div>
-</div>
 
-<script>
-    function changeScore(color, value) {
-        var scoreElement = document.getElementById(color + 'Score');
-        var currentScore = parseInt(scoreElement.innerText);
-        var newScore = currentScore + value;
 
-        if (newScore >= 0) {
-            scoreElement.innerText = newScore;
+    <script>
+        var matchId = 123;
+        var arbitreName="Arbitre1";
+
+      $(document).ready(function () {
+        // Fonction pour mettre à jour le tableau de bord depuis l'API
+        function updateDashboardFromAPI(matchId) {
+          // Faites une requête AJAX à votre API avec le matchId
+          $.ajax({
+            url: "http://localhost:8080/api/match/" + matchId,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+              // Mise à jour du tableau de bord avec les données de l'API
+              updateInfoWithData(data);
+            },
+            error: function (error) {
+              console.error(
+                "Erreur lors de la récupération des données de l'API:",
+                error
+              );
+            },
+          });
         }
-    }
+        updateDashboardFromAPI(matchId);
 
-    // Compte à rebours
-    var countdownElement = document.getElementById('countdown');
-    var countdownTime = 600; // 10 minutes en secondes
+        setInterval(function () {
+          updateDashboardFromAPI(matchId);
+        }, 1000); // 60000 millisecondes = 60 secondes
 
-    function updateCountdown() {
-        var minutes = Math.floor(countdownTime / 60);
-        var seconds = countdownTime % 60;
-        countdownElement.innerText = 'Temps restant: ' + formatTime(minutes) + ':' + formatTime(seconds);
+        function updateInfoWithData(data) {
+ 
+          console.log(data);
+          $(".red-block h2 ").html(
+            data.redPlayer.clubName + " - " + data.redPlayer.name
+          );
+          $(".blue-block h2").html(
+            data.bluePlayer.clubName + " - " + data.bluePlayer.name
+          );
+          $(".status").html(
+            data.status
+          );
+ 
+        $(".button-blue").prop("disabled", data.status !== 'EN_COURS');
+        $(".button-red").prop("disabled",  data.status !== 'EN_COURS');        
+        $("#countdown").html(data.status == 'EN_COURS' ? differenceBetweenDates(data.endTime,new Date ) : "00:00");
 
-        if (countdownTime > 0) {
-            countdownTime--;
-            setTimeout(updateCountdown, 1000);
-        } else {
-            countdownElement.innerText = 'Temps écoulé';
+          
         }
+    });
+
+        function changeScore(color, value, clubName) {
+            var scoreElement = $('#' + color + 'Score');
+            var currentScore = parseInt(scoreElement.text());
+            var newScore = currentScore + value;
+    
+            if (newScore >= 0) {
+                scoreElement.text(newScore);
+                updateScoreAPI(color, newScore, clubName);
+            }
+        }
+        function differenceBetweenDates(dateString1, dateString2) {
+        const date1 = new Date(dateString1);
+        const date2 = new Date(dateString2);
+
+        const timeDifference = Math.abs(date2 - date1);
+
+        const hours = Math.floor(timeDifference / 3600000);
+        const minutes = Math.floor((timeDifference % 3600000) / 60000);
+        const seconds = Math.floor((timeDifference % 60000) / 1000);
+
+        const formattedDifference = `${pad(minutes)}:${pad(seconds)}`;
+
+        return formattedDifference;
     }
-
-    function formatTime(time) {
-        return (time < 10) ? '0' + time : time;
+    function pad(num) {
+        return num < 10 ? `0${num}` : `${num}`;
     }
-
-    updateCountdown();
-</script>
-
-</body>
+        function updateScoreAPI(color, score, clubName) {
+            // Faites ici votre appel à l'API pour mettre à jour le score en utilisant jQuery
+            var apiUrl = 'https://exemple.com/api/update-score';
+            var data = {
+                color: color,
+                score: score,
+                clubName: clubName
+            };
+    
+            $.ajax({
+                url: apiUrl,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(response) {
+                    console.log('Score mis à jour avec succès:', response);
+                },
+                error: function(error) {
+                    console.error('Erreur lors de la mise à jour du score:', error);
+                }
+            });
+        }
+    </script>
+    
+  </body>
 </html>

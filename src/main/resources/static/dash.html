@@ -1,241 +1,282 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tableau de Bord - Scores en Temps Réel</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #ecf0f1;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #ecf0f1;
+      }
 
-        .container {
-            max-width: 100%;
-            margin: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
+      .container {
+        max-width: 100%;
+        margin: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
 
-        .header-block {
-            background-color: #2c3e50; /* Nouvelle couleur de fond */
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-        }
+      .header-block {
+        background-color: #2c3e50; /* Nouvelle couleur de fond */
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
 
-        .header-logo {
-            position: absolute;
-            top: 20px; /* Marge du haut ajustée */
-            right: 20px; /* Marge de droite ajustée */
-            max-height: 80px;
-        }
+      .header-logo {
+        position: absolute;
+        top: 20px; /* Marge du haut ajustée */
+        right: 20px; /* Marge de droite ajustée */
+        max-height: 80px;
+      }
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+      .dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
+      }
 
-        .arbitre-box {
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #fff; /* Couleur de fond par défaut */
-        }
+      .arbitre-box {
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #fff; /* Couleur de fond par défaut */
+      }
 
-        .arbitre-name {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+      .arbitre-name {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
 
-        .score-block {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
+      .score-block {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-top: 10px;
+      }
 
-        .score {
-            font-size: 1.5em;
-            margin: 0;
-        }
+      .score {
+        font-size: 1.5em;
+        margin: 0;
+      }
 
-        .red-score {
-            color: #fff;
-            background-color: #e74c3c;
-            padding: 10px;
-            border-radius: 10px;
-            margin: 2px;
-        }
+      .red-score {
+        color: #fff;
+        background-color: #e74c3c;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 2px;
+      }
 
-        .blue-score {
-            color: #fff;
-            background-color: #3498db;
-            padding: 10px;
-            border-radius: 5px;
-            border-radius: 10px;
-            margin: 2px;
-        }
+      .blue-score {
+        color: #fff;
+        background-color: #3498db;
+        padding: 10px;
+        border-radius: 5px;
+        border-radius: 10px;
+        margin: 2px;
+      }
 
-        .match-info {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 1.2em;
-        }
+      .match-info {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 1.2em;
+      }
 
-        .countdown {
-            font-size: 1.8em; /* Augmentation de la taille du texte */
-            font-weight: bold;
-            margin-top: 20px;
-            color: #fff; /* Couleur du texte ajustée à blanc */
-        }
+      .countdown {
+        font-size: 1.8em; /* Augmentation de la taille du texte */
+        font-weight: bold;
+        margin-top: 20px;
+        color: #fff; /* Couleur du texte ajustée à blanc */
+      }
 
-        .days-info {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            justify-content: center;
-            margin-top: 20px;
-        }
+      .days-info {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+      }
 
-        .days-info div {
-            text-align: center;
-        }
+      .days-info div {
+        text-align: center;
+      }
 
-        .vs-text {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin: 0 20px;
-        }
+      .vs-text {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin: 0 20px;
+      }
 
-        .club-box {
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            font-size: 1.2em;
-            margin-top: 20px;
-        }
+      .club-box {
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        font-size: 1.2em;
+        margin-top: 20px;
+      }
 
-        .red-club {
-            background-color: #e74c3c;
-            color: #fff;
-        }
+      .red-club {
+        background-color: #e74c3c;
+        color: #fff;
+      }
 
-        .blue-club {
-            background-color: #3498db;
-            color: #fff;
-        }
+      .blue-club {
+        background-color: #3498db;
+        color: #fff;
+      }
+      .match-controls {
+        text-align: center;
+        margin-top: 20px;
+      }
+      #startMatch {
+        background-color: #3cb92d;
+        color: #fff;
+        padding: 20px;
+        border: none;
+        border-radius: 14px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: bolder;
+      }
+      #startMatch:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+      #stopMatch {
+        background-color: #e74c3c;
+        color: #fff;
+        padding: 20px;
+        border: none;
+        border-radius: 14px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: bolder;
+      }
+
+      #stopMatch:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
     </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="header-block">
-        <img class="header-logo" src="path/to/federation-logo.png" alt="Fédération Logo">
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-block">
+        <img
+          class="header-logo"
+          src="path/to/federation-logo.png"
+          alt="Fédération Logo"
+        />
         <h1>Score Match</h1>
         <div class="match-info">
-            <p>Wosho Championship regional Rabat , 16 décembre 2023 </p>
-            <div class="days-info">
-                <div class="club-box red-club">Club Karaté Rouge<br>Joueur: Khalid</div>
-                <div class="vs-text">VS</div>
-                <div class="club-box blue-club">Club Karaté Bleu<br>Joueur: Fouad</div>
-            </div>
-            <div class="countdown" id="countdown">Compte à rebours: 03:00</div>
+          <p>Wosho Championship regional Rabat , 16 décembre 2023</p>
+          <div class="days-info">
+            <div class="club-box red-club" id="red-club"></div>
+            <div class="vs-text">VS</div>
+            <div class="club-box blue-club" id="blue-club"></div>
+          </div>
+          <div class="countdown" id="countdown">Temps restant : 03:00</div>
+          <div class="match-controls">
+            <button id="startMatch" onclick="startMatch()">
+              Démarrer le match
+            </button>
+            <button id="stopMatch" onclick="stopMatch()" disabled>
+              Arrêter le match
+            </button>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <div class="dashboard" id="dashboard">
+      <div class="dashboard" id="dashboard">
         <!-- Les scores des arbitres seront affichés ici -->
+      </div>
     </div>
-</div>
 
-<script>
-    
-    $(document).ready(function () {
+    <script>
+      var matchId = 123;
+      $(document).ready(function () {
         // Fonction pour mettre à jour le tableau de bord depuis l'API
         function updateDashboardFromAPI(matchId) {
-            // Faites une requête AJAX à votre API avec le matchId
-            $.ajax({
-                url: 'http://localhost:8080/api/match/' + matchId,
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    // Mise à jour du tableau de bord avec les données de l'API
-                    updateDashboardWithData(data);
-                },
-                error: function (error) {
-                    console.error('Erreur lors de la récupération des données de l\'API:', error);
-                }
-            });
+          // Faites une requête AJAX à votre API avec le matchId
+          $.ajax({
+            url: "http://localhost:8080/api/match/" + matchId,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+              // Mise à jour du tableau de bord avec les données de l'API
+              updateDashboardWithData(data);
+            },
+            error: function (error) {
+              console.error(
+                "Erreur lors de la récupération des données de l'API:",
+                error
+              );
+            },
+          });
         }
 
         // Fonction pour mettre à jour le tableau de bord avec des données
         function updateDashboardWithData(data) {
-            // Mettez à jour votre tableau de bord avec les données reçues
-            // ...
-            console.log(data);
-        }
+          // Mettez à jour votre tableau de bord avec les données reçues
+          // ...
+          console.log(data);
+          $("#red-club").html(
+            data.redPlayer.clubName + " <br>Joueur: " + data.redPlayer.name
+          );
+          $("#blue-club").html(
+            data.bluePlayer.clubName + " <br>Joueur: " + data.bluePlayer.name
+          );
 
-        // Appel initial pour afficher le tableau de bord
-        // Vous pouvez remplacer 123 par l'ID du match que vous souhaitez charger
-        updateDashboardFromAPI(123);
+        var dashboardElement = document.getElementById("dashboard");
+        dashboardElement.innerHTML = "";
+        $("#startMatch").prop("disabled", data.status == 'EN_COURS');
+        $("#stopMatch").prop("disabled",  data.status !== 'EN_COURS');        
+        $("#countdown").html(data.status == 'EN_COURS' ? differenceBetweenDates(data.endTime,new Date ) : "00:00");
 
-        // Mettre à jour le tableau de bord toutes les X secondes (par exemple, toutes les 60 secondes)
-        setInterval(function () {
-            // Vous pouvez remplacer 123 par l'ID du match que vous souhaitez charger
-            updateDashboardFromAPI(123);
-        }, 1000); // 60000 millisecondes = 60 secondes
-    });
-    // Données factices pour représenter les scores des arbitres avec les noms des joueurs
-    var scores = [
-        { name: 'Arbitre 1', redPlayer: 'Khalid', bluePlayer: 'Fouad', redScore: 9, blueScore: 10 },
-        { name: 'Arbitre 2', redPlayer: 'Khalid', bluePlayer: 'Fouad', redScore: 9, blueScore: 10 },
-        { name: 'Arbitre 3', redPlayer: 'Khalid', bluePlayer: 'Fouad', redScore: 9, blueScore: 9 },
-        { name: 'Arbitre 4', redPlayer: 'Khalid', bluePlayer: 'Fouad', redScore: 10, blueScore: 9 },
-        { name: 'Arbitre 5', redPlayer: 'Khalid', bluePlayer: 'Fouad', redScore: 10, blueScore: 10 },
-    ];
+          data.scores.forEach(function (arbitre) {
+            var arbitreBox = document.createElement("div");
+            arbitreBox.classList.add("arbitre-box");
 
-    // Fonction pour mettre à jour le tableau de bord
-    function updateDashboard() {
-        var dashboardElement = document.getElementById('dashboard');
-        dashboardElement.innerHTML = '';
-
-        scores.forEach(function (arbitre) {
-            var arbitreBox = document.createElement('div');
-            arbitreBox.classList.add('arbitre-box');
-            
             // Mise à jour de la couleur du fond en fonction du score
-            arbitreBox.style.backgroundColor = arbitre.redScore > arbitre.blueScore ? '#ffada5' : arbitre.redScore < arbitre.blueScore ? '#a3daff': '#fff';
+            arbitreBox.style.backgroundColor =
+              arbitre.redScore > arbitre.blueScore
+                ? "#ffada5"
+                : arbitre.redScore < arbitre.blueScore
+                ? "#a3daff"
+                : "#fff";
 
-            var arbitreName = document.createElement('div');
-            arbitreName.classList.add('arbitre-name');
-            arbitreName.textContent = arbitre.name;
+            var arbitreName = document.createElement("div");
+            arbitreName.classList.add("arbitre-name");
+            arbitreName.textContent = arbitre.arbitreName;
 
-            var scoreBlock = document.createElement('div');
-            scoreBlock.classList.add('score-block');
+            var scoreBlock = document.createElement("div");
+            scoreBlock.classList.add("score-block");
 
-            var redScore = document.createElement('p');
-            redScore.classList.add('score', 'red-score');
-            redScore.textContent = arbitre.redPlayer + ' : ' + arbitre.redScore;
+            var redScore = document.createElement("p");
+            redScore.classList.add("score", "red-score");
+            redScore.textContent =
+              data.redPlayer.name + " : " + arbitre.redScore;
 
-            var blueScore = document.createElement('p');
-            blueScore.classList.add('score', 'blue-score');
-            blueScore.textContent = arbitre.bluePlayer + ' : ' + arbitre.blueScore;
+            var blueScore = document.createElement("p");
+            blueScore.classList.add("score", "blue-score");
+            blueScore.textContent =
+              data.bluePlayer.name + " : " + arbitre.blueScore;
 
             scoreBlock.appendChild(redScore);
             scoreBlock.appendChild(blueScore);
@@ -244,45 +285,70 @@
             arbitreBox.appendChild(scoreBlock);
 
             dashboardElement.appendChild(arbitreBox);
+            
+          });
+        }
+
+        // Appel initial pour afficher le tableau de bord
+        // Vous pouvez remplacer 123 par l'ID du match que vous souhaitez charger
+        updateDashboardFromAPI(matchId);
+
+        // Mettre à jour le tableau de bord toutes les X secondes (par exemple, toutes les 60 secondes)
+        setInterval(function () {
+          // Vous pouvez remplacer 123 par l'ID du match que vous souhaitez charger
+          updateDashboardFromAPI(matchId);
+        }, 1000); // 60000 millisecondes = 60 secondes
+      });
+      var countdownInterval;
+      // Fonction pour démarrer le match
+      function startMatch() {
+        // Appel à l'API REST pour démarrer le match
+        $.ajax({
+          url: "http://localhost:8080/api/match/start/" + matchId,
+          type: "GET", // ou 'PUT' selon votre API
+          success: function () {
+            $("#startMatch").prop("disabled", true);
+            $("#stopMatch").prop("disabled", false);
+          },
+          error: function (error) {
+            console.error("Erreur lors du démarrage du match:", error);
+          },
         });
+      }
+
+      // Fonction pour arrêter le match
+      function stopMatch() {
+        // Appel à l'API REST pour arrêter le match
+        $.ajax({
+          url: "http://localhost:8080/api/match/stop/" + matchId,
+          type: "GET", 
+          success: function () {
+            $("#startMatch").prop("disabled", false);
+            $("#stopMatch").prop("disabled", true);
+          },
+          error: function (error) {
+            console.error("Erreur lors de l'arrêt du match:", error);
+          },
+        });
+      }
+      function differenceBetweenDates(dateString1, dateString2) {
+        const date1 = new Date(dateString1);
+        const date2 = new Date(dateString2);
+
+        const timeDifference = Math.abs(date2 - date1);
+
+        const hours = Math.floor(timeDifference / 3600000);
+        const minutes = Math.floor((timeDifference % 3600000) / 60000);
+        const seconds = Math.floor((timeDifference % 60000) / 1000);
+
+        const formattedDifference = `${pad(minutes)}:${pad(seconds)}`;
+
+        return formattedDifference;
+    }
+    function pad(num) {
+        return num < 10 ? `0${num}` : `${num}`;
     }
 
-    // Compte à rebours factice pour représenter le temps restant
-    function updateCountdown() {
-        var countdownElement = document.getElementById('countdown');
-        var remainingTime = calculateRemainingTime(); // Fonction à implémenter
-        countdownElement.textContent = 'Compte à rebours: ' + formatTime(remainingTime);
-    }
-
-    // Fonction factice pour calculer le temps restant
-    function calculateRemainingTime() {
-        // À implémenter : Retourner le temps restant en secondes
-        return 180; // 3 minutes
-    }
-
-    // Fonction factice pour formater le temps
-    function formatTime(seconds) {
-        var minutes = Math.floor(seconds / 60);
-        var remainingSeconds = seconds % 60;
-
-        return (
-            padNumber(minutes) + ':' +
-            padNumber(remainingSeconds)
-        );
-    }
-
-    // Fonction pour ajouter un zéro devant les chiffres < 10
-    function padNumber(num) {
-        return num < 10 ? '0' + num : num;
-    }
-
-    // Appel initial pour afficher les scores et le compte à rebours
-    updateDashboard();
-    updateCountdown();
-
-    // Mettre à jour le compte à rebours toutes les secondes (1000 ms)
-    
-</script>
-
-</body>
+    </script>
+  </body>
 </html>

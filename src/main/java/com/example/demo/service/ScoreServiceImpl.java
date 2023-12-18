@@ -22,4 +22,14 @@ public class ScoreServiceImpl implements ScoreService {
     public boolean updateScore(Score score) {
          return cachedDataService.updateLiveScoreData( score); 
    }
+
+    @Override
+    public Match startMatchById(Long matchId) {
+        return cachedDataService.startMatch( matchId);
+     }
+
+    @Override
+    public Match endMatchById(Long matchId) {
+        return cachedDataService.endtMatch( matchId);  
+      }
 }

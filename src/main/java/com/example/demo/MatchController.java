@@ -34,7 +34,32 @@ public class MatchController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    // Méthode GET pour demarer un match par son ID
+    @GetMapping("start/{matchId}")
+    public ResponseEntity<Match> startMatchById(@PathVariable Long matchId) {
+        // Utilisez le service pour récupérer les informations du match par son ID
+        Match match = scoreService.startMatchById(matchId);
 
+        // Vérifiez si le match a été trouvé
+        if (match != null) {
+            return new ResponseEntity<>(match, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    // Méthode GET pour demarer un match par son ID
+    @GetMapping("stop/{matchId}")
+    public ResponseEntity<Match> endMatchById(@PathVariable Long matchId) {
+        // Utilisez le service pour récupérer les informations du match par son ID
+        Match match = scoreService.endMatchById(matchId);
+
+        // Vérifiez si le match a été trouvé
+        if (match != null) {
+            return new ResponseEntity<>(match, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     // Méthode POST pour mettre à jour le score d'un match
     @PostMapping("/updateScore")
     public ResponseEntity<String> updateScore(@RequestBody Score score) {

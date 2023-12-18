@@ -15,9 +15,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Match {
     private int id;
+    private String CompetitionName;
     private Joueur redPlayer;
     private Joueur bluePlayer;
     private StatusMatch status;
     private LocalDateTime startTime;
+    private LocalDateTime endTime;
+
     List<Score> scores =  new ArrayList();
 }
