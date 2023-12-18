@@ -100,7 +100,6 @@
         background-color: #96b3c6;
         cursor: not-allowed;
       }
-   
 
       .countdown {
         font-size: 3.5em;
@@ -108,8 +107,8 @@
       }
       h2 {
         margin: 1px;
-    font-size: 1em;
-    font-weight: 400;
+        font-size: 1em;
+        font-weight: 400;
       }
       h1 {
         margin: 4px;
@@ -130,7 +129,7 @@
       <div class="header-block">
         <h1>Arbitre 1</h1>
         <p class="countdown" id="countdown">03:00</p>
-        <p>Evenement XXXX-- Match ID</p>
+        <p id="competitionName"></p>
         <div class="status">MATCH EN COURS</div>
       </div>
 
@@ -157,7 +156,7 @@
             </button>
             <button
               class="button button-blue"
-              onclick="changeScore('blue', -1, 'ClubKaratéBleu')">
+              onclick="changeScore('blue', -1)">
               -
             </button>
           </div>
@@ -165,10 +164,12 @@
       </div>
     </div>
 
-
     <script>
-        var matchId = 123;
-        var arbitreName="Arbitre1";
+      var matchId = 123;
+      var arbitreName = "Arbitre1";
+      var scoreId = 0;
+      var newBlueScore= 0;
+      var newRedScore= 0;
 
       $(document).ready(function () {
         // Fonction pour mettre à jour le tableau de bord depuis l'API
@@ -190,6 +191,7 @@
             },
           });
         }
+        
         updateDashboardFromAPI(matchId);
 
         setInterval(function () {
@@ -197,37 +199,41 @@
         }, 1000); // 60000 millisecondes = 60 secondes
 
         function updateInfoWithData(data) {
- 
-          console.log(data);
           $(".red-block h2 ").html(
             data.redPlayer.clubName + " - " + data.redPlayer.name
           );
           $(".blue-block h2").html(
             data.bluePlayer.clubName + " - " + data.bluePlayer.name
           );
-          $(".status").html(
-            data.status
+          $(".status").html(data.status);
+          $("#competitionName").html(data.competitionName);
+          $(".button-blue").prop("disabled", data.status !== "EN_COURS");
+          $(".button-red").prop("disabled", data.status !== "EN_COURS");
+
+          $("#countdown").html(
+            data.status == "EN_COURS"
+              ? differenceBetweenDates(data.endTime, new Date())
+              : "00:00"
           );
- 
-        $(".button-blue").prop("disabled", data.status !== 'EN_COURS');
-        $(".button-red").prop("disabled",  data.status !== 'EN_COURS');        
-        $("#countdown").html(data.status == 'EN_COURS' ? differenceBetweenDates(data.endTime,new Date ) : "00:00");
-
-          
         }
-    });
+      });
 
-        function changeScore(color, value, clubName) {
-            var scoreElement = $('#' + color + 'Score');
-            var currentScore = parseInt(scoreElement.text());
-            var newScore = currentScore + value;
-    
-            if (newScore >= 0) {
-                scoreElement.text(newScore);
-                updateScoreAPI(color, newScore, clubName);
-            }
+      function changeScore(color, value, clubName) {
+        var scoreElement = $("#" + color + "Score");
+        var currentScore = parseInt(scoreElement.text());
+        var newScore = currentScore + value;
+
+
+        if (newScore >= 0) {
+          scoreElement.text(newScore);
+          newBlueScore = ((color == "blue") ? newScore : newBlueScore  );
+          newRedScore= ((color == "red") ? newScore: newRedScore  );
+          console.log("newRedScore "+newRedScore);
+          console.log("newblueScore "+newBlueScore);
+          updateScoreAPI( newBlueScore,newRedScore);
         }
-        function differenceBetweenDates(dateString1, dateString2) {
+      }
+      function differenceBetweenDates(dateString1, dateString2) {
         const date1 = new Date(dateString1);
         const date2 = new Date(dateString2);
 
@@ -240,33 +246,36 @@
         const formattedDifference = `${pad(minutes)}:${pad(seconds)}`;
 
         return formattedDifference;
-    }
-    function pad(num) {
+      }
+      function pad(num) {
         return num < 10 ? `0${num}` : `${num}`;
-    }
-        function updateScoreAPI(color, score, clubName) {
-            // Faites ici votre appel à l'API pour mettre à jour le score en utilisant jQuery
-            var apiUrl = 'https://exemple.com/api/update-score';
-            var data = {
-                color: color,
-                score: score,
-                clubName: clubName
-            };
-    
-            $.ajax({
-                url: apiUrl,
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function(response) {
-                    console.log('Score mis à jour avec succès:', response);
-                },
-                error: function(error) {
-                    console.error('Erreur lors de la mise à jour du score:', error);
-                }
-            });
-        }
+      }
+      
+      function updateScoreAPI(blueScore, redScore) {
+        var apiUrl = "http://localhost:8080/api/match/updateScore";
+        var data = {
+          "id": scoreId,
+          "arbitreName" : arbitreName,
+          "blueScore" : blueScore,
+          "redScore" : redScore,
+          "match": {
+            "id": matchId
+          },
+        };
+
+        $.ajax({
+          url: apiUrl,
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify(data),
+          success: function (response) {
+            console.log("Score mis à jour avec succès:", response);
+          },
+          error: function (error) {
+            console.error("Erreur lors de la mise à jour du score:", error);
+          },
+        });
+      }
     </script>
-    
   </body>
 </html>

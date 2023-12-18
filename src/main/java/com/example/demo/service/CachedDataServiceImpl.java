@@ -22,10 +22,10 @@ public class CachedDataServiceImpl implements CachedDataService {
 
     public CachedDataServiceImpl(){
         log.info("Initialistion des matches ...........");
-        matchData = Match.builder().id(1)
+        matchData = Match.builder().id(123)
         .bluePlayer(Joueur.builder().clubName("Club Karaté Bleu").name("Khalid").build())
         .redPlayer(Joueur.builder().clubName("Club Karaté Rouge").name("Fouad").build())
-        .CompetitionName("Wosho Championship regional Rabat , 16 décembre 2023")
+        .CompetitionName("Wosho Championship regional Rabat")
         .startTime(null)
         .status(StatusMatch.PROGRAMME)
         .build();
@@ -35,7 +35,7 @@ public class CachedDataServiceImpl implements CachedDataService {
                            .blueScore(0)
                            .redScore(0)
                            .id(i)
-                           .match(Match.builder().id(1).build())
+                           .match(Match.builder().id(123).build())
                            .build());
         }
             matchData.setScores(scores);
@@ -43,19 +43,18 @@ public class CachedDataServiceImpl implements CachedDataService {
     }
     @Override
     public Match getLiveMatchData(Long matchId) {
-        log.info("Get live Match data called");
 		return matchData;
     }
 
     @Override
     public boolean updateLiveScoreData(Score score) {
         if(score != null) {
-			log.debug("Matche updating");
             matchData.getScores().stream()
                                  .filter(item-> item.equals(score))
                                  .forEachOrdered(a ->{ 
                                                 a.setRedScore(score.getRedScore());
                                                 a.setBlueScore(score.getBlueScore());
+                                                			log.info("Matche Updated OK ");
                                             });
             return true;
 		}else{
@@ -64,10 +63,10 @@ public class CachedDataServiceImpl implements CachedDataService {
     }
     @Override
     public Match startMatch(Long matchId) {
-       matchData = Match.builder().id(1)
+       matchData = Match.builder().id(123)
         .bluePlayer(Joueur.builder().clubName("Club Karaté Bleu").name("Khalid").build())
         .redPlayer(Joueur.builder().clubName("Club Karaté Rouge").name("Fouad").build())
-        .CompetitionName("")
+        .CompetitionName("Wosho Championship regional Rabat")
         .startTime(LocalDateTime.now())
         .endTime(LocalDateTime.now().plusMinutes(3))
         .status(StatusMatch.EN_COURS)
@@ -78,7 +77,7 @@ public class CachedDataServiceImpl implements CachedDataService {
                            .blueScore(0)
                            .redScore(0)
                            .id(i)
-                           .match(Match.builder().id(1).build())
+                           .match(Match.builder().id(123).build())
                            .build());
         }
             matchData.setScores(scores);

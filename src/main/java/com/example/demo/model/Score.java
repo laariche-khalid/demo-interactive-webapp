@@ -28,7 +28,7 @@ public class Score {
         }
 
         Score other = (Score) obj;
-        return  id == other.id && ArbitreName == other.ArbitreName && match.getId() == other.match.getId();
+        return  id == other.id && ArbitreName.equals(other.ArbitreName) && match.getId() == other.match.getId();
     }
 
     @Override
